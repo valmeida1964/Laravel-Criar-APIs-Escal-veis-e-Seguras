@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Product;
 use App\Services\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -18,6 +20,24 @@ class MainController extends Controller
             'serverTimezone' => now()->timezoneName,
             'apiVersion' => 'v1 '
 
+        ]);
+    }
+
+    public function listCategories()
+    {
+        $categories = Category::all();
+
+        return ApiResponse::success([
+            'categories' => $categories
+        ]);
+    }
+
+    public function listProducts()
+    {
+        $products = Product::all();
+
+        return ApiResponse::success([
+            'products' => $products
         ]);
     }
 }
