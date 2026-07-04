@@ -125,4 +125,5 @@ return [
     
     // custom constants
     'maintenance_mode' => env('APP_MAINTENANCE_MODE', false),
+    'rate_limit' => env('APP_RATE_LIMIT', 0),
 ];
