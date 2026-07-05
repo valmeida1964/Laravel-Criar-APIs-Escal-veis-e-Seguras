@@ -7,5 +7,11 @@ Route::get('/status', [MainController::class, 'status']);
 
 Route::get('/categories', [MainController::class, 'listCategories']);
 Route::get('/products',   [MainController::class, 'listProducts']);
+Route::get('/movements',  [MainController::class, 'listMovements']);
+
+Route::get('categories/{id}',  [MainController::class, 'getCategory']);
+Route::get('products/{id}',    [MainController::class, 'getProduct']);
+
+Route::get('categories/{id}/products',    [MainController::class, 'getProductByCategory']);
 
 
