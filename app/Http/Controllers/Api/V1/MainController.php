@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\ApiResponse;
@@ -28,16 +30,20 @@ class MainController extends Controller
         $categories = Category::all();
 
         return ApiResponse::success([
-            'categories' => $categories
+            // 'categories' => $categories,
+
+            'categories' => CategoryResource::collection($categories),
+            'totalCategories' => $categories->count(),
         ]);
     }
 
     public function listProducts()
     {
-        $products = Product::all();
-
+        $products = Product::with('category')->get();
+        
         return ApiResponse::success([
-            'products' => $products
+            'products' => ProductResource::collection($products),
+            'totalProducts' => $products->count(),
         ]);
     }
 }
