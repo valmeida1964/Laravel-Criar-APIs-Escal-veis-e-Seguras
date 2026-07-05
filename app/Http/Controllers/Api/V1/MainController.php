@@ -29,32 +29,48 @@ class MainController extends Controller
 
     public function listCategories()
     {
-        $categories = Category::all();
+        $perPage = request()->get('per_page', 15); // 15 values per page
+        $categories = Category::paginate($perPage);
 
         return ApiResponse::success([
-            // 'categories' => $categories,
-
             'categories' => CategoryResource::collection($categories),
-            'totalCategories' => $categories->count(),
+            'pagination' => [
+                'current_page' => $categories->currentPage(),
+                'last_page' => $categories->lastPage(),
+                'per_page' => $categories->perPage(),
+                'totalCategories' => $categories->count(),
+            ]
         ]);
     }
 
     public function listProducts()
     {
-        $products = Product::with('category')->get();
-        
+        $perPage = request()->get('per_page', 15); // 15 values per page
+        $products = Product::paginate($perPage);
+
         return ApiResponse::success([
-            'products' => ProductResource::collection($products),
-            'totalProducts' => $products->count(),
+            $products = ProductResource::collection($products),
+            'pagination' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'totalProducts' => $products->count(),
+            ]
         ]);
     }
     public function listMovements()
     {
-        $movements = Movement::with('product.category')->get();
-      
+        $perPage = request()->get('per_page', 15); // 15 values per page
+        $movements = Movement::paginate($perPage);
+
         return ApiResponse::success([
             'movements' => MovementResource::collection($movements),
-            'totalMovements' => $movements->count(),
+            'pagination' => [
+                'current_page' => $movements->currentPage(),
+                'last_page' => $movements->lastPage(),
+                'per_page' => $movements->perPage(),
+                'totalMovements' => $movements->count(),
+            ]
         ]);
     }
     
@@ -103,6 +119,37 @@ class MainController extends Controller
             'category' => new CategoryResource($category),
             'products' => $products,
             'totalProducts' => count($products),
+        ]);
+    }
+
+    public function listMovementsOrdered($field, $direction)
+    {
+        $validFields = ['id','product_id','quantity','movement_type','created_at','updated_at'];
+        $validDirections = ['asc','desc'];
+
+        // validate field
+        if(!in_array($field, $validFields)) {
+            return ApiResponse::error("Invalid field for ordering:{$field}", 400);
+        }
+
+        // validate direction
+        if(!in_array($direction, $validDirections)) {
+            return ApiResponse::error("Invalid direction for ordering:{$direction}", 400);
+        }
+
+        $perPage = request()->get('per_page', 15); // 15 values per page
+        $movements = Movement::with('product.category')
+                ->orderBy($field, $direction)
+                ->paginate($perPage);
+
+        return ApiResponse::success([
+            'movements' => MovementResource::collection($movements),
+            'pagination' => [
+                'current_page' => $movements->currentPage(),
+                'last_page' => $movements->lastPage(),
+                'per_page' => $movements->perPage(),
+                'totalMovements' => $movements->count(),
+            ]
         ]);
     }
 

@@ -12,6 +12,6 @@ Route::get('/movements',  [MainController::class, 'listMovements']);
 Route::get('categories/{id}',  [MainController::class, 'getCategory']);
 Route::get('products/{id}',    [MainController::class, 'getProduct']);
 
-Route::get('categories/{id}/products',    [MainController::class, 'getProductByCategory']);
-
+Route::get('categories/{id}/products',              [MainController::class, 'getProductByCategory']);
+Route::get('movements/ordered/{field}/{direction}', [MainController::class, 'listMovementsOrdered']);
 
