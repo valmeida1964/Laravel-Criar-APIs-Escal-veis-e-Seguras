@@ -210,7 +210,7 @@ class MainController extends Controller
         }
 
         $data = $request->validate([
-            'name' => 'required|string|max:50|unique:categories,name,' . $id,
+            'name' => 'string|max:50|unique:categories,name,' . $id,
             'description' => 'nullable|string'
 
         ]);
@@ -222,17 +222,19 @@ class MainController extends Controller
             "Category updated successfuly",
         );
     }
-    public function updateProduct(Request $request, $id)
+
+    public function updateProduct(Request $request, mixed $id)
     {
+
         $product = Product::find($id);
         if(!$product) {
             return ApiResponse::error("Product with ID {$id} not found.", 404);
         }
 
         $data = $request->validate([
-            'name' => 'required|string|max:50|unique:products,name,' . $id,
+            'name' => 'string|max:50|unique:products,name,' . $id,
             'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'exists:categories,id'
         ]);
 
         $product->update($data);
@@ -242,7 +244,8 @@ class MainController extends Controller
             "Product updated successfuly",
         );
     }
-    public function updateMovement(Request $request, $id)
+
+    public function updateMovement(Request $request, mixed $id)
     {
         $movement = Movement::find($id);
         if(!$movement) {
@@ -262,7 +265,8 @@ class MainController extends Controller
             "Movement updated successfuly",
         );
     }
-    public function deleteMovement($id)
+
+    public function deleteMovement(mixed $id)
     {
         $movement = Movement::find($id);
         if(!$movement) {
@@ -276,7 +280,8 @@ class MainController extends Controller
             "Movement deleted successfuly"
         );
     }
-    public function deleteProduct($id)
+
+    public function deleteProduct(mixed $id)
     {
         $product = Product::find($id);
         if(!$product) {
@@ -290,7 +295,8 @@ class MainController extends Controller
             "Product deleted successfuly"
         );
     }
-    public function deleteCategory($id)
+    
+    public function deleteCategory(mixed $id)
     {
         $category = Category::find($id);
         if(!$category) {
